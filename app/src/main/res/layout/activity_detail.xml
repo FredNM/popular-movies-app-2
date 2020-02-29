@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="textCreator"
+            type="com.frednm.popular_movies_app_2.features.detail.utils.TextCreator" />
+        <variable
+            name="viewmodel"
+            type="com.frednm.popular_movies_app_2.features.detail.DetailViewModel" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scroll_view_detail_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true"
+        android:fillViewport="true"
+        tools:context="com.frednm.popular_movies_app_2.features.detail.DetailActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_detail_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context="com.frednm.popular_movies_app_2.features.detail.DetailActivity">
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/title_card_view_height_detail_activity"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_small"
+                    app:cardElevation="@dimen/cardElevation"
+                    app:cardUseCompatPadding="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/movie_image">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/movie_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/margin_medium"
+                            android:layout_gravity="center_vertical"
+                            android:text="@{viewmodel.movie.getTitle()}"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <ImageView
+                    android:id="@+id/movie_image"
+                    android:layout_width="@dimen/movie_width_detail_activity"
+                    android:layout_height="@dimen/movie_height_detail_activity"
+                    android:layout_marginStart="40dp"
+
+                    app:layout_constraintTop_toBottomOf="@+id/guideline"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/movie_released_year"
+                    app:imageUrl="@{viewmodel.movie.getPosterPath()}"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/movie_released_year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:text="@{textCreator.extractYear(viewmodel.movie.getReleaseDate())}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/movie_duration"
+                    app:layout_constraintStart_toEndOf="@id/movie_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/margin_medium"/>
+
+                <TextView
+                    android:id="@+id/movie_duration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:text="@{textCreator.durationInMin(viewmodel.movie.getRuntime())}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="@+id/movie_released_year"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/margin_medium"/>
+
+                <TextView
+                    android:id="@+id/movie_rating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@{textCreator.voteAverage(viewmodel.movie.getVoteAverage())}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    app:layout_constraintStart_toStartOf="@+id/movie_duration"
+                    app:layout_constraintTop_toBottomOf="@+id/guideline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/margin_medium"/>
+
+                <!-- background attribute not working, I don't know why
+                 android:background="@drawable/button_favorite_selector_drawable"
+                 See this https://github.com/material-components/material-components-android/issues/889
+                 !-->
+                <Button
+                    android:id="@+id/mark_as_favorite"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mark_favorite"
+                    isSelected="@{viewmodel.movie.getUserFavorite()}"
+                    android:layout_marginTop="8dp"
+                    android:onClick="@{viewmodel::userClicksOnFavoriteButton}"
+                    android:backgroundTint="@drawable/button_favorite_selector_color"
+                    app:layout_constraintStart_toStartOf="@+id/movie_rating"
+                    app:layout_constraintTop_toBottomOf="@+id/movie_rating" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="250dp" />
+
+
+                <TextView
+                    android:id="@+id/movie_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginTop="36dp"
+                    android:text="@{viewmodel.movie.getOverview()}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/movie_image" />
+
+                <!-- For Trailers. To configure in next movie app -->
+                <ImageView
+                    android:id="@+id/straight_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:background="@color/colorOnBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/movie_description" />
+
+                <Button
+                    android:id="@+id/button_videos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_play_arrow_white_24dp"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="10dp"
+                    android:onClick="@{viewmodel::userClicksOnVideosButton}"
+                    android:padding="@dimen/padding"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:text="@{textCreator.numberTrailers(viewmodel.videos)}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_reviews"
+                    app:layout_constraintTop_toBottomOf="@+id/straight_line" />
+
+                <Button
+                    android:id="@+id/button_reviews"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_comment_white_24dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:onClick="@{viewmodel::userClicksOnReviewsButton}"
+                    android:padding="@dimen/padding"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:text="@{textCreator.numberReviews(viewmodel.reviews)}"
+                    app:layout_constraintStart_toEndOf="@id/button_videos"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/straight_line" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>
